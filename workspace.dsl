@@ -10,6 +10,10 @@ workspace {
             userService = container "User Service"
             paymentService = container "Payment Service"
             notificationService = container "Notification Service"
+            redis = container "Redis" {
+                tags "External"
+
+            }
             messageBroker = container "Message Broker" {
                 tags "External"
             }
@@ -27,6 +31,10 @@ workspace {
 
         userService -> messageBroker "publish events to" "AMQP"
         paymentService -> messageBroker "publish events to" "AMQP"
+
+
+        userService -> redis "stores OTP" "RESP"
+        paymentService -> redis "stores OTP" "RESP"
 
         notificationService ->  messageBroker "consumes from" "AMQP"
 
