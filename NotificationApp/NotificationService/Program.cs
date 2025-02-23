@@ -14,6 +14,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 
 // Add services to the container.
+builder.Services.AddSingleton<TwilioService>();
+builder.Services.AddSingleton<InfobibService>();
+builder.Services.AddScoped<ISmsService, SmsService>();
 
 builder.Services.AddScoped<IEmailService, EmailService>();
 
@@ -29,7 +32,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<NotificationConsumer>();
+    x.AddConsumer<UserConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("localhost", "/", h =>
@@ -45,7 +48,7 @@ builder.Services.AddMassTransit(x =>
                 x.ExchangeType = "topic";
                 x.RoutingKey = "user.events.*";
             });
-            e.ConfigureConsumer<NotificationConsumer>(context);
+            e.ConfigureConsumer<UserConsumer>(context);
         });
 
     });
