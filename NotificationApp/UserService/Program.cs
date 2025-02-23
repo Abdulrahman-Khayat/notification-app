@@ -18,7 +18,7 @@ builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<PasswordHasher<User>>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-
+builder.Services.AddCustomJwt(builder.Configuration);
 
 builder.Services.AddMassTransit(x =>
 {
