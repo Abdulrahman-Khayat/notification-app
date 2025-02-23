@@ -1,15 +1,23 @@
-using Common;
+using System.Reflection;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using NotificationService;
-using Resend;
+using NotificationService.Data;
+using NotificationService.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 // Add services to the container.
 
-builder.Services.AddScoped<ITwilioService, TwilioService>();
-builder.Services.AddScoped<IInfobip, InfobibService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
+builder.Services.AddScoped<ITemplateRepo, TemplateRepo>();
 
 builder.Services.AddControllers();
 
@@ -17,6 +25,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddMassTransit(x =>
 {
@@ -44,6 +53,11 @@ builder.Services.AddMassTransit(x =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
+}
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
