@@ -1,18 +1,47 @@
-﻿services:
-  userservice:
-    image: userservice
-    build:
-      context: .
-      dockerfile: UserService/Dockerfile
+﻿
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: password@123
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data1:/var/lib/postgresql/data
 
-  paymentservice:
-    image: paymentservice
-    build:
-      context: .
-      dockerfile: PaymentService/Dockerfile
+  redis:
+    image: redis:7-alpine
+    container_name: redis_cache
+    restart: always
+    ports:
+      - "6379:6379"
 
-  notificationservice:
-    image: notificationservice
-    build:
-      context: .
-      dockerfile: NotificationService/Dockerfile
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: rabbitmq_broker
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"  # AMQP protocol port
+      - "15672:15672"  # Management UI
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mail_server
+    restart: always
+    ports:
+      - "1025:1025"  # SMTP Server
+      - "8025:8025"  # Web UI
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: unless-stopped
+    ports:
+      - 8026:8025
+      - 1026:1025
+volumes:
+  postgres_data1:
