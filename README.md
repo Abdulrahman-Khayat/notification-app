@@ -4,7 +4,14 @@ A simple application that implements User Nofification Service
 
 
 ## System Design 
-![alt text](image.png)
+system design is built by following <a href="https://c4model.com/" target="_blank">C4 Models</a> using 
+<a href="https://structurizr.com/" target="_blank">Structurizr</a>
+
+to run Structurizr, run the following command in the home directory of the project:
+
+        
+
+![alt text](image.png) 
 
 ## How to Run (for development)
 1. Download the code
@@ -15,3 +22,5 @@ A simple application that implements User Nofification Service
 3. Run each project using:
 
         dotnet run
+
+## 
