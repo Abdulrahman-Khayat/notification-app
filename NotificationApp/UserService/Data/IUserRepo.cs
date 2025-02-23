@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Common.Data;
 using UserService.Models;
 
 namespace UserService.Data;

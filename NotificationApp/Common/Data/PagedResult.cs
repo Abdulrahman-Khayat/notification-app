@@ -1,4 +1,4 @@
-namespace UserService.Data;
+namespace Common.Data;
 
 /// <summary>
 ///   A generic class that represents a paged result
