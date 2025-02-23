@@ -16,9 +16,9 @@ public class OTPService: IOTPService
     }
 
     // Method to generate OTP if one doesn't already exist in Redis
-    public string GenerateOTP(Guid userId)
+    public string GenerateOTP(Guid userId, string type)
     {
-        var otpKey = $"user:otp:{userId}";
+        var otpKey = $"{type}:otp:{userId}";
 
         // Check if OTP already exists in Redis
         if (_database.KeyExists(otpKey))
@@ -37,9 +37,9 @@ public class OTPService: IOTPService
     }
 
     // Method to validate OTP from Redis
-    public bool ValidateOTP(Guid userId, string inputOtp)
+    public bool ValidateOTP(Guid userId, string inputOtp, string type)
     {
-        var otpKey = $"otp:{userId}";
+        var otpKey = $"{type}:otp:{userId}";
 
         // Retrieve OTP from Redis
         var storedOtp = _database.StringGet(otpKey);
@@ -55,9 +55,9 @@ public class OTPService: IOTPService
     }
 
     // Optionally, method to delete OTP after use (to prevent reuse)
-    public void DeleteOTP(Guid userId)
+    public void DeleteOTP(Guid userId, string type)
     {
-        var otpKey = $"otp:{userId}";
+        var otpKey = $"{type}:otp:{userId}";
         _database.KeyDelete(otpKey);
     }
 }
