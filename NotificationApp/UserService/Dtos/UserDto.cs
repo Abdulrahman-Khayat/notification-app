@@ -14,3 +14,9 @@ public class CreateUserDto
     public string Email { get; set; }
     public string Mobile { get; set; }
 }
+
+public class LoginDto
+{
+    public required string Email { get; set; }
+    public required string Password { get; set; }
+}
