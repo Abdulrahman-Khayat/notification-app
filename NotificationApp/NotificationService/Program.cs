@@ -32,7 +32,7 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<UserConsumer>();
+    x.AddConsumer<NotificationConsumer>();
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("localhost", "/", h =>
@@ -48,7 +48,17 @@ builder.Services.AddMassTransit(x =>
                 x.ExchangeType = "topic";
                 x.RoutingKey = "user.events.*";
             });
-            e.ConfigureConsumer<UserConsumer>(context);
+            e.ConfigureConsumer<NotificationConsumer>(context);
+        });
+        cfg.ReceiveEndpoint("payment-events-queue", e =>
+        {
+            e.ConfigureConsumeTopology = false;
+            e.Bind("payment-events", x =>
+            {
+                x.ExchangeType = "topic";
+                x.RoutingKey = "payment.events.*";
+            });
+            e.ConfigureConsumer<NotificationConsumer>(context);
         });
 
     });

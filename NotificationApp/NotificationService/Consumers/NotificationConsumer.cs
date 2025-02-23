@@ -6,7 +6,7 @@ using NotificationService.Services;
 
 namespace NotificationService;
 
-public class UserConsumer(ISmsService _smsService, IEmailService _emailService, ITemplateRepo _templateRepo): IConsumer<Notification>
+public class NotificationConsumer(ISmsService _smsService, IEmailService _emailService, ITemplateRepo _templateRepo): IConsumer<Notification>
 {
     public async Task Consume(ConsumeContext<Notification> context)
     {
@@ -18,10 +18,20 @@ public class UserConsumer(ISmsService _smsService, IEmailService _emailService, 
                 string key = match.Groups[1].Value; // Extract var name without <>
                 return context.Message.Data.Variables.TryGetValue(key, out string value) ? value : match.Value;
             });
+
+            switch (context.Message.Data.Type)
+            {
+                case "sms":
+                    await _smsService.SendSmsAsync(context.Message.Data.Recipient, body);
+                    break;
+                case "email":
+                    await _emailService.SendEmailAsync(context.Message.Data.Recipient, template.Subject, body);
+                    break;
+                default:
+                    break;
+            }
             
-            await _emailService.SendEmailAsync(context.Message.Data.Recipient, template.Subject, body);
         }
         
-        Console.WriteLine($"[User Created] {context.Message.UserId} - {context.Message.Data.Recipient}");
     }       
 }
