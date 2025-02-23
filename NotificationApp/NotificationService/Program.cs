@@ -1,12 +1,18 @@
 using Common;
 using MassTransit;
 using NotificationService;
+using Resend;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddScoped<ITwilioService, TwilioService>();
+builder.Services.AddScoped<IInfobip, InfobibService>();
+
+
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

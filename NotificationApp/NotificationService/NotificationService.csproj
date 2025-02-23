@@ -8,9 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Infobip.Api.SDK" Version="1.0.3" />
         <PackageReference Include="MassTransit" Version="8.3.7-develop.2216" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.7-develop.2216" />
+        <PackageReference Include="Resend" Version="0.0.13" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="Twilio" Version="7.8.4" />
     </ItemGroup>
 
     <ItemGroup>
