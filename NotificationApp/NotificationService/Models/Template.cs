@@ -1,6 +1,8 @@
+using Common.Models;
+
 namespace NotificationService.Models;
 
-public class Template
+public class Template: BaseModel
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

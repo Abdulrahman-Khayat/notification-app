@@ -1,6 +1,8 @@
+using Common.Models;
+
 namespace UserService.Models;
 
-public class User
+public class User: BaseModel
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
