@@ -3,6 +3,7 @@ using Common;
 using MassTransit;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 using UserService.Data;
 using UserService.Models;
 
@@ -13,6 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    
+
+builder.Services.AddSingleton<ConnectionMultiplexer>(sp =>
+{
+    var redisConnectionString = "localhost:6379"; // Replace with your Redis connection string
+    return ConnectionMultiplexer.Connect(redisConnectionString);
+});
+builder.Services.AddSingleton<IOTPService, OTPService>();
 
 builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<PasswordHasher<User>>();
@@ -42,6 +51,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
